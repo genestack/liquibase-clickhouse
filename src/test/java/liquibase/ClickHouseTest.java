@@ -20,8 +20,8 @@
  */
 package liquibase;
 
-import com.clickhouse.jdbc.JdbcConfig;
 import liquibase.ext.clickhouse.params.StandaloneConfig;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -46,7 +46,7 @@ public class ClickHouseTest extends BaseClickHouseTestCase {
 
     @Override
     protected void doWithConnection(BaseClickHouseTestCase.ThrowingConsumer<Connection> consumer) {
-        String queryString = "?clickhouse.jdbc.v1=true&" + JdbcConfig.PROP_EXTERNAL_DATABASE + "=false";
+        String queryString = "?clickhouse.jdbc.v2=true&externalDatabase=false";
         try (Connection connection = clickHouseContainer.createConnection(queryString)) {
             consumer.accept(connection);
         } catch (Exception e) {
