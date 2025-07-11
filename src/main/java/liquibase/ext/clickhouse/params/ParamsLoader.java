@@ -47,6 +47,21 @@ public final class ParamsLoader {
         System.getProperty("liquibase.clickhouse.configfile", "liquibaseClickhouse");
     private static LiquibaseClickHouseConfig liquibaseClickhouseProperties = null;
 
+    /**
+     * Environment variable to control whether to use legacy storage implementation.
+     * If set to "true", the legacy implementation will be used.
+     */
+    private static final String LEGACY_STORAGE_ENV_VAR = "LIQUIBASE_CLICKHOUSE_LEGACY_STORAGE";
+
+    /**
+     * Checks if the legacy storage implementation should be used.
+     * @return true if the legacy implementation should be used, false otherwise
+     */
+    public static boolean useLegacyStorage() {
+        String legacyStorage = System.getenv(LEGACY_STORAGE_ENV_VAR);
+        return "true".equalsIgnoreCase(legacyStorage);
+    }
+
     private static final Set<String> VALID_PROPERTIES =
         new HashSet<>(Arrays.asList("clusterName", "tableZooKeeperPathPrefix"));
 

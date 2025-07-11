@@ -51,7 +51,9 @@ public class TagDatabaseGeneratorTemplate extends LiquibaseSqlTemplate<String> {
         );
     }
 
-    private String getIdSubQuery(boolean useFinal) {
+    private String getIdSubQuery(boolean isStandalone) {
+        // Only use FINAL keyword for standalone mode with ReplacingMergeTree engine (non-legacy)
+        boolean useFinal = isStandalone && !liquibase.ext.clickhouse.params.ParamsLoader.useLegacyStorage();
         return String.format(
             "(SELECT %s FROM %s.%s %s ORDER BY %s DESC, %s DESC LIMIT 1)",
             ChangelogColumns.ID,

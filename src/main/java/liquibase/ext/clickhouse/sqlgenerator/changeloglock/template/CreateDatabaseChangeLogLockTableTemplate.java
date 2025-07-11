@@ -35,8 +35,33 @@ public class CreateDatabaseChangeLogLockTableTemplate extends LiquibaseSqlTempla
         this.onClusterTemplate = new OnClusterTemplate();
     }
 
-    @Override
-    public String visit(StandaloneConfig standaloneConfig) {
+    /**
+     * Generate SQL for the legacy storage implementation.
+     * This uses MergeTree engine instead of CollapsingMergeTree.
+     *
+     * @return the SQL for creating the changelog lock table with legacy storage
+     */
+    private String generateLegacyStorage() {
+        return String.format(
+            "CREATE TABLE IF NOT EXISTS `%s`.%s "
+                + "("
+                + "ID Int64,"
+                + "LOCKED UInt8,"
+                + "LOCKGRANTED Nullable(DateTime64),"
+                + "LOCKEDBY Nullable(String)"
+                + ") "
+                + "ENGINE MergeTree() ORDER BY (ID, LOCKED)",
+            database.getLiquibaseCatalogName(), database.getDatabaseChangeLogLockTableName()
+        );
+    }
+
+    /**
+     * Generate SQL for the current storage implementation.
+     * This uses CollapsingMergeTree engine.
+     *
+     * @return the SQL for creating the changelog lock table with current storage
+     */
+    private String generateCurrentStorage() {
         return String.format(
             "CREATE TABLE IF NOT EXISTS `%s`.%s "
                 + "("
@@ -52,7 +77,48 @@ public class CreateDatabaseChangeLogLockTableTemplate extends LiquibaseSqlTempla
     }
 
     @Override
-    public String visit(ClusterConfig clusterConfig) {
+    public String visit(StandaloneConfig standaloneConfig) {
+        // Check if legacy storage should be used
+        if (liquibase.ext.clickhouse.params.ParamsLoader.useLegacyStorage()) {
+            return generateLegacyStorage();
+        } else {
+            return generateCurrentStorage();
+        }
+    }
+
+    /**
+     * Generate SQL for the legacy storage implementation in cluster mode.
+     * This uses ReplicatedMergeTree engine instead of KeeperMap.
+     *
+     * @param clusterConfig the cluster configuration
+     * @return the SQL for creating the changelog lock table with legacy storage
+     */
+    private String generateLegacyClusterStorage(ClusterConfig clusterConfig) {
+        return String.format(
+            "CREATE TABLE IF NOT EXISTS `%s`.%s %s"
+                + "("
+                + "ID Int64,"
+                + "LOCKED UInt8,"
+                + "LOCKGRANTED Nullable(DateTime64),"
+                + "LOCKEDBY Nullable(String)"
+                + ") "
+                + "ENGINE ReplicatedMergeTree('%s/%s', '{replica}') ORDER BY (ID, LOCKED)",
+            database.getLiquibaseCatalogName(),
+            database.getDatabaseChangeLogLockTableName(),
+            clusterConfig.accept(onClusterTemplate),
+            clusterConfig.tableZooKeeperPathPrefix(),
+            database.getDatabaseChangeLogLockTableName()
+        );
+    }
+
+    /**
+     * Generate SQL for the current storage implementation in cluster mode.
+     * This uses KeeperMap engine.
+     *
+     * @param clusterConfig the cluster configuration
+     * @return the SQL for creating the changelog lock table with current storage
+     */
+    private String generateCurrentClusterStorage(ClusterConfig clusterConfig) {
         return String.format(
             "CREATE TABLE IF NOT EXISTS `%s`.%s %s"
                 + "("
@@ -68,5 +134,15 @@ public class CreateDatabaseChangeLogLockTableTemplate extends LiquibaseSqlTempla
             clusterConfig.tableZooKeeperPathPrefix(),
             database.getDatabaseChangeLogLockTableName()
         );
+    }
+
+    @Override
+    public String visit(ClusterConfig clusterConfig) {
+        // Check if legacy storage should be used
+        if (liquibase.ext.clickhouse.params.ParamsLoader.useLegacyStorage()) {
+            return generateLegacyClusterStorage(clusterConfig);
+        } else {
+            return generateCurrentClusterStorage(clusterConfig);
+        }
     }
 }

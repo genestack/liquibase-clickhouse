@@ -90,19 +90,79 @@ public class CreateDatabaseChangeLogTableTemplate extends LiquibaseSqlTemplate<S
         );
     }
 
-    @Override
-    public String visit(StandaloneConfig standaloneConfig) {
+    /**
+     * Generate SQL for the legacy storage implementation.
+     * This uses MergeTree engine instead of ReplacingMergeTree.
+     *
+     * @param standaloneConfig the standalone configuration
+     * @return the SQL for creating the changelog table with legacy storage
+     */
+    private String generateLegacyStorage(StandaloneConfig standaloneConfig) {
+        return generateFirstPart(standaloneConfig)
+                   + String.format(
+            "ENGINE = MergeTree() ORDER BY (%s, %s, %s)", ID, AUTHOR, FILENAME);
+    }
+
+    /**
+     * Generate SQL for the current storage implementation.
+     * This uses ReplacingMergeTree engine.
+     *
+     * @param standaloneConfig the standalone configuration
+     * @return the SQL for creating the changelog table with current storage
+     */
+    private String generateCurrentStorage(StandaloneConfig standaloneConfig) {
         return generateFirstPart(standaloneConfig)
                    + String.format(
             "ENGINE = ReplacingMergeTree() ORDER BY (%s, %s, %s)", ID, AUTHOR, FILENAME);
     }
 
     @Override
-    public String visit(ClusterConfig clusterConfig) {
+    public String visit(StandaloneConfig standaloneConfig) {
+        // Check if legacy storage should be used
+        if (liquibase.ext.clickhouse.params.ParamsLoader.useLegacyStorage()) {
+            return generateLegacyStorage(standaloneConfig);
+        } else {
+            return generateCurrentStorage(standaloneConfig);
+        }
+    }
+
+    /**
+     * Generate SQL for the legacy storage implementation in cluster mode.
+     * This uses ReplicatedMergeTree engine instead of KeeperMap.
+     *
+     * @param clusterConfig the cluster configuration
+     * @return the SQL for creating the changelog table with legacy storage
+     */
+    private String generateLegacyClusterStorage(ClusterConfig clusterConfig) {
+        return generateFirstPart(clusterConfig)
+                   + String.format(
+            "ENGINE = ReplicatedMergeTree('%s/%s', '{replica}') ORDER BY (%s, %s, %s)",
+            clusterConfig.tableZooKeeperPathPrefix(), database.getDatabaseChangeLogTableName(), ID, AUTHOR, FILENAME
+        );
+    }
+
+    /**
+     * Generate SQL for the current storage implementation in cluster mode.
+     * This uses KeeperMap engine.
+     *
+     * @param clusterConfig the cluster configuration
+     * @return the SQL for creating the changelog table with current storage
+     */
+    private String generateCurrentClusterStorage(ClusterConfig clusterConfig) {
         return generateFirstPart(clusterConfig)
                    + String.format(
             "ENGINE = KeeperMap('%s/%s') PRIMARY KEY (%s)",
             clusterConfig.tableZooKeeperPathPrefix(), database.getDatabaseChangeLogTableName(), ID
         );
+    }
+
+    @Override
+    public String visit(ClusterConfig clusterConfig) {
+        // Check if legacy storage should be used
+        if (liquibase.ext.clickhouse.params.ParamsLoader.useLegacyStorage()) {
+            return generateLegacyClusterStorage(clusterConfig);
+        } else {
+            return generateCurrentClusterStorage(clusterConfig);
+        }
     }
 }

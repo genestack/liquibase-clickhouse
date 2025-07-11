@@ -49,6 +49,16 @@ paths in your zookeeper:
 <hr/>
 
 ###### Important changes
+ - 0.8.6:
+   - Added support for legacy storage implementation via environment variable
+     - Set `LIQUIBASE_CLICKHOUSE_LEGACY_STORAGE=true` to use the legacy storage engines:
+       - For changelog table:
+         - MergeTree instead of ReplacingMergeTree for standalone mode
+         - ReplicatedMergeTree instead of KeeperMap for cluster mode
+       - For changelog lock table:
+         - MergeTree instead of CollapsingMergeTree for standalone mode
+         - ReplicatedMergeTree instead of KeeperMap for cluster mode
+     - This allows compatibility with databases created with versions prior to the storage engine change
  - 0.8.5:
    - Fixed SQL generation issues in specific cases:
      - when rerunning `runAlways` changesets
