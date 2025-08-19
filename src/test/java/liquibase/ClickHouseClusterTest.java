@@ -19,7 +19,6 @@
  */
 package liquibase;
 
-import com.clickhouse.jdbc.ClickHouseDriver;
 import liquibase.ext.clickhouse.params.ClusterConfig;
 import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.AfterAll;
@@ -113,7 +112,7 @@ public class ClickHouseClusterTest extends BaseClickHouseTestCase {
     @Override
     protected void doWithConnection(ThrowingConsumer<Connection> callback) {
         try {
-            Driver driver = new ClickHouseDriver();
+            Driver driver = new com.clickhouse.jdbc.Driver();
             String url =
                 "jdbc:clickhouse://localhost:" + container.getServicePort("nginx", 8123) + "/default";
             Properties properties = new Properties();
