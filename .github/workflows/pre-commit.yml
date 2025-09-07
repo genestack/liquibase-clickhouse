@@ -9,5 +9,5 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.3.0
       - uses: pre-commit/action@v3.0.1
