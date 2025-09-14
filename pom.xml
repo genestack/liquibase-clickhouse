@@ -83,7 +83,7 @@
         <slf4j.version>2.0.17</slf4j.version>
         <apache.http5.version>5.5</apache.http5.version> <!--should be aligned with version in clickhouse-jdbc.pom-->
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
-        <license-maven-plugin.version>2.5.0</license-maven-plugin.version>
+        <license-maven-plugin.version>2.6.0</license-maven-plugin.version>
         <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
         <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
