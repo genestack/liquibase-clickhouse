@@ -46,6 +46,7 @@ public class UpdateTemplate extends LiquibaseSqlTemplate<String> {
     public String visitDefault(LiquibaseClickHouseConfig object) {
         String alteredColumns =
             replacements.entrySet().stream()
+                .filter(entry -> entry.getValue() != null)
                 .map(
                     entry ->
                         String.format("%s = %s", entry.getKey(), escape(database, entry.getValue())))

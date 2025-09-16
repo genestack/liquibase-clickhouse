@@ -20,7 +20,7 @@ services:
     hostname: zookeeper
 
   clickhouse-s1r1:
-    image: clickhouse/clickhouse-server:25.5.2
+    image: clickhouse/clickhouse-server:25.8.2
     hostname: clickhouse-s1r1
     ports:
       - 8123
@@ -40,7 +40,7 @@ services:
       CLICKHOUSE_SKIP_USER_SETUP: 1
 
   clickhouse-s1r2:
-    image: clickhouse/clickhouse-server:25.5.2
+    image: clickhouse/clickhouse-server:25.8.2
     hostname: clickhouse-s1r2
     ports:
       - 8123
@@ -60,7 +60,7 @@ services:
       CLICKHOUSE_SKIP_USER_SETUP: 1
 
   clickhouse-s2r1:
-    image: clickhouse/clickhouse-server:25.5.2
+    image: clickhouse/clickhouse-server:25.8.2
     hostname: clickhouse-s2r1
     ports:
       - 8123
@@ -80,7 +80,7 @@ services:
       CLICKHOUSE_SKIP_USER_SETUP: 1
 
   clickhouse-s2r2:
-    image: clickhouse/clickhouse-server:25.5.2
+    image: clickhouse/clickhouse-server:25.8.2
     hostname: clickhouse-s2r2
     ports:
       - 8123
