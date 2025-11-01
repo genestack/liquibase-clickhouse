@@ -76,7 +76,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <clickhouse-jdbc.version>0.9.3</clickhouse-jdbc.version>
         <liquibase.version>5.0.1</liquibase.version>
-        <junit.version>6.0.0</junit.version>
+        <junit.version>6.0.1</junit.version>
         <test-containers.version>1.21.3</test-containers.version>
         <snakeyaml.version>2.5</snakeyaml.version>
         <typesafe-config.version>1.4.5</typesafe-config.version>
