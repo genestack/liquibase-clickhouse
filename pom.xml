@@ -74,7 +74,7 @@
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <clickhouse-jdbc.version>0.9.3</clickhouse-jdbc.version>
+        <clickhouse-jdbc.version>0.9.4</clickhouse-jdbc.version>
         <liquibase.version>5.0.1</liquibase.version>
         <junit.version>6.0.1</junit.version>
         <test-containers.version>1.21.3</test-containers.version>
