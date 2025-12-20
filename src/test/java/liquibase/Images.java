@@ -20,7 +20,7 @@
 package liquibase;
 
 final class Images {
-    static final String CLICKHOUSE = "clickhouse/clickhouse-server:25.10.1";
+    static final String CLICKHOUSE = "clickhouse/clickhouse-server:25.12.1";
 
     private Images() {
         // Prevent instantiation
