@@ -110,12 +110,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.clickhouse</groupId>
-            <artifactId>jdbc-v2</artifactId>
-            <version>${clickhouse-jdbc.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>${liquibase.version}</version>
@@ -192,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin.version}</version>
+                <version>3.6.0</version>
                 <configuration>
                     <consoleOutput>true</consoleOutput>
                     <configLocation>${project.basedir}/checkstyle.xml</configLocation>
