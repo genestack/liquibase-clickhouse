@@ -79,7 +79,7 @@
         <junit.version>6.0.3</junit.version>
         <test-containers.version>1.21.4</test-containers.version>
         <snakeyaml.version>2.6</snakeyaml.version>
-        <typesafe-config.version>1.4.6</typesafe-config.version>
+        <typesafe-config.version>1.4.7</typesafe-config.version>
         <slf4j.version>2.0.17</slf4j.version>
         <apache.http5.version>5.6.1</apache.http5.version> <!--should be aligned with version in clickhouse-jdbc.pom-->
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
