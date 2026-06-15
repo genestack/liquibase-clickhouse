@@ -78,7 +78,7 @@
         <clickhouse-jdbc.version>0.9.6</clickhouse-jdbc.version>
         <liquibase.version>5.0.3</liquibase.version>
         <junit.version>6.1.0</junit.version>
-        <test-containers.version>2.0.2</test-containers.version>
+        <test-containers.version>2.0.5</test-containers.version>
         <commons-io.version>2.16.1</commons-io.version>
 
         <snakeyaml.version>2.6</snakeyaml.version>
