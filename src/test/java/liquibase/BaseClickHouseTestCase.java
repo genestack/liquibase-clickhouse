@@ -31,7 +31,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.shaded.org.apache.commons.io.output.NullWriter;
+import org.apache.commons.io.output.NullWriter;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -168,9 +168,12 @@ abstract class BaseClickHouseTestCase {
 
                 // The second run should execute the runAlways changeSet again
                 liquibase.update();
+                // Wait for async ALTER TABLE UPDATE to complete in ClickHouse
+                Thread.sleep(2000);
                 runAlwaysChangeSet = getChangeLogRow(runAlwaysChangeSetId, connection);
                 assertFalse(runAlwaysChangeSet.get(ChangelogColumns.MD5SUM).toString().isEmpty());
                 assertEquals(ChangeSet.ExecType.RERAN.name(), runAlwaysChangeSet.get(ChangelogColumns.EXECTYPE));
+                // COMMENTS should be updated when runAlways changeSet is re-executed
                 assertTrue(runAlwaysChangeSet.get(ChangelogColumns.COMMENTS).toString()
                     .endsWith("Inserting some data on each run..."));
             }

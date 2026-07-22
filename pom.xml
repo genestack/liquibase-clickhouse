@@ -70,6 +70,7 @@
     </licenses>
 
     <properties>
+        <!-- Build Configuration -->
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
@@ -77,11 +78,9 @@
         <clickhouse-jdbc.version>0.9.6</clickhouse-jdbc.version>
         <liquibase.version>5.0.3</liquibase.version>
         <junit.version>6.1.1</junit.version>
-        <test-containers.version>1.21.4</test-containers.version>
-        <snakeyaml.version>2.6</snakeyaml.version>
+        <test-containers.version>2.0.5</test-containers.version>
+        <commons-io.version>2.16.1</commons-io.version>
         <typesafe-config.version>1.4.9</typesafe-config.version>
-        <slf4j.version>2.0.18</slf4j.version>
-        <apache.http5.version>5.6.2</apache.http5.version> <!--should be aligned with version in clickhouse-jdbc.pom-->
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
         <license-maven-plugin.version>2.7.1</license-maven-plugin.version>
         <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
@@ -95,7 +94,7 @@
     <dependencies>
         <dependency>
             <groupId>com.clickhouse</groupId>
-            <artifactId>clickhouse-jdbc</artifactId>
+            <artifactId>jdbc-v2</artifactId>
             <version>${clickhouse-jdbc.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -113,20 +112,21 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>clickhouse</artifactId>
+            <artifactId>testcontainers-clickhouse</artifactId>
             <version>${test-containers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <version>${test-containers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>${snakeyaml.version}</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${test-containers.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -134,27 +134,9 @@
             <version>${typesafe-config.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>${apache.http5.version}</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

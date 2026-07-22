@@ -9,29 +9,37 @@
         </comment>
         <sql splitStatements="true">
             <![CDATA[
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (1, 1, 'line1');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (2, 2, 'line2');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (3, 3, 'line3');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (4, 1, 'line4');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (5, 2, 'line5');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (6, 3, 'line6');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (7, 1, 'line7');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (8, 2, 'line8');
-        INSERT INTO IndexDist(rowId, fileId, line) VALUES (9, 3, 'line9');
+        INSERT INTO IndexDist(rowId, fileId, line) SETTINGS insert_distributed_sync = 1 VALUES
+            (1, 1, 'line1'),
+            (2, 2, 'line2'),
+            (3, 3, 'line3'),
+            (4, 1, 'line4'),
+            (5, 2, 'line5'),
+            (6, 3, 'line6'),
+            (7, 1, 'line7'),
+            (8, 2, 'line8'),
+            (9, 3, 'line9');
 
         SYSTEM RELOAD DICTIONARY IndexDict ON CLUSTER '{cluster}';
-        -- Wait till the preivious reload is finished
-        SYSTEM RELOAD DICTIONARY IndexDict ON CLUSTER '{cluster}';
+        SELECT throwIf(
+            max(unloaded) > 0,
+            'IndexDict is not loaded on all cluster replicas'
+        ) FROM (
+            SELECT count() AS unloaded
+            FROM clusterAllReplicas('{cluster}', system.dictionaries)
+            WHERE database = 'default' AND name = 'IndexDict' AND status != 'LOADED'
+        );
 
-        INSERT INTO DataByRowDist(rowId, item) VALUES (1, 'item1');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (2, 'item2');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (3, 'item3');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (4, 'item4');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (5, 'item5');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (6, 'item6');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (7, 'item7');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (8, 'item8');
-        INSERT INTO DataByRowDist(rowId, item) VALUES (9, 'item9');
+        INSERT INTO DataByRowDist(rowId, item) SETTINGS insert_distributed_sync = 1 VALUES
+            (1, 'item1'),
+            (2, 'item2'),
+            (3, 'item3'),
+            (4, 'item4'),
+            (5, 'item5'),
+            (6, 'item6'),
+            (7, 'item7'),
+            (8, 'item8'),
+            (9, 'item9');
             ]]>
         </sql>
         <rollback>

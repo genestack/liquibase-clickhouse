@@ -20,7 +20,6 @@
  */
 package liquibase.ext.clickhouse.database;
 
-import com.clickhouse.jdbc.ClickHouseDriver;
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.DatabaseConnection;
 import liquibase.exception.DatabaseException;
@@ -32,7 +31,7 @@ public class ClickHouseDatabase extends AbstractJdbcDatabase {
 
     private static final String DATABASE_NAME = "ClickHouse";
     private static final int DEFAULT_PORT = 8123;
-    private static final String DRIVER_CLASS_NAME = ClickHouseDriver.class.getName();
+    private static final String DRIVER_CLASS_NAME = "com.clickhouse.jdbc.Driver";
     public static final String CURRENT_DATE_TIME_FUNCTION =
         "toDateTime64('"
             + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS").format(new Date())

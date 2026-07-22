@@ -42,8 +42,13 @@ public class ParamsLoaderTest {
 
     @Test
     void loadBrokenParams() {
+        // In v2, underscore format (tableZooKeeperPath_Prefix) is now supported
+        // and gets normalized to camelCase (tableZooKeeperPathPrefix)
         LiquibaseClickHouseConfig params =
             ParamsLoader.getLiquibaseClickhouseProperties("testLiquibaseClickhouseBroken");
-        assertInstanceOf(StandaloneConfig.class, params);
+        assertInstanceOf(ClusterConfig.class, params);
+        ClusterConfig clusterConfig = (ClusterConfig) params;
+        assertEquals("Cluster1", clusterConfig.clusterName());
+        assertEquals("Path1", clusterConfig.tableZooKeeperPathPrefix());
     }
 }
