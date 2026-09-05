@@ -43,9 +43,7 @@ public final class ParamsLoader {
 
     private static final Logger LOG = Scope.getCurrentScope().getLog(ParamsLoader.class);
 
-    private static final String CONF_FILE =
-        System.getProperty("liquibase.clickhouse.configfile", "liquibaseClickhouse");
-    private static LiquibaseClickHouseConfig liquibaseClickhouseProperties = null;
+    private static final String CONF_FILE = "liquibaseClickhouse";
 
     private static final Set<String> VALID_PROPERTIES =
         new HashSet<>(Arrays.asList("clusterName", "tableZooKeeperPathPrefix"));
@@ -99,11 +97,14 @@ public final class ParamsLoader {
     }
 
     public static LiquibaseClickHouseConfig getLiquibaseClickhouseProperties() {
-        if (liquibaseClickhouseProperties != null) {
-            return liquibaseClickhouseProperties;
+        try {
+            String value = Scope.getCurrentScope().get("liquibase.clickhouse.configfile", String.class);
+            if (value != null) {
+                return getLiquibaseClickhouseProperties(value);
+            }
+        } catch (Exception ignored) {
         }
-        liquibaseClickhouseProperties = getLiquibaseClickhouseProperties(CONF_FILE);
-        return liquibaseClickhouseProperties;
+        return getLiquibaseClickhouseProperties(CONF_FILE);
     }
 
     public static LiquibaseClickHouseConfig getLiquibaseClickhouseProperties(String configFile) {

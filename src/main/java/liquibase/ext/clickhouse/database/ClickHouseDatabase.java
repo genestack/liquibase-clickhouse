@@ -27,8 +27,12 @@ import liquibase.exception.DatabaseException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import liquibase.ext.clickhouse.params.LiquibaseClickHouseConfig;
+import liquibase.ext.clickhouse.params.ParamsLoader;
 
 public class ClickHouseDatabase extends AbstractJdbcDatabase {
+
+    private LiquibaseClickHouseConfig liquibaseClickHouseConfig;
 
     private static final String DATABASE_NAME = "ClickHouse";
     private static final int DEFAULT_PORT = 8123;
@@ -96,5 +100,18 @@ public class ClickHouseDatabase extends AbstractJdbcDatabase {
     @Override
     public boolean supportsDDLInTransaction() {
         return false;
+    }
+
+    public LiquibaseClickHouseConfig getLiquibaseClickHouseConfig() {
+        if (liquibaseClickHouseConfig == null) {
+            liquibaseClickHouseConfig = ParamsLoader.getLiquibaseClickhouseProperties();
+        }
+        return liquibaseClickHouseConfig;
+    }
+
+    @Override
+    public void setConnection(DatabaseConnection conn) {
+        super.setConnection(conn);
+        liquibaseClickHouseConfig = ParamsLoader.getLiquibaseClickhouseProperties();
     }
 }

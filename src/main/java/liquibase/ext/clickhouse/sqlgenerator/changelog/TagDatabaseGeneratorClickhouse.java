@@ -22,7 +22,6 @@ package liquibase.ext.clickhouse.sqlgenerator.changelog;
 import liquibase.database.Database;
 import liquibase.ext.clickhouse.database.ClickHouseDatabase;
 import liquibase.ext.clickhouse.params.LiquibaseClickHouseConfig;
-import liquibase.ext.clickhouse.params.ParamsLoader;
 import liquibase.ext.clickhouse.sqlgenerator.SqlGeneratorUtil;
 import liquibase.ext.clickhouse.sqlgenerator.changelog.template.TagDatabaseGeneratorTemplate;
 import liquibase.sql.Sql;
@@ -45,7 +44,7 @@ public class TagDatabaseGeneratorClickhouse extends TagDatabaseGenerator {
     public Sql[] generateSql(
         TagDatabaseStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain
     ) {
-        LiquibaseClickHouseConfig properties = ParamsLoader.getLiquibaseClickhouseProperties();
+        LiquibaseClickHouseConfig properties = ((ClickHouseDatabase) database).getLiquibaseClickHouseConfig();
         String tagDatabaseQuery = properties.accept(new TagDatabaseGeneratorTemplate(database, statement.getTag()));
         return SqlGeneratorUtil.generateSql(database, tagDatabaseQuery);
     }
