@@ -23,7 +23,6 @@ import liquibase.ChecksumVersion;
 import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.ext.clickhouse.database.ClickHouseDatabase;
-import liquibase.ext.clickhouse.params.ParamsLoader;
 import liquibase.ext.clickhouse.sqlgenerator.SqlGeneratorUtil;
 import liquibase.ext.clickhouse.sqlgenerator.changelog.template.UpdateTemplate;
 import liquibase.sql.Sql;
@@ -52,7 +51,7 @@ public class UpdateChangeSetChecksumClickHouse extends UpdateChangeSetChecksumGe
         SqlGeneratorChain sqlGeneratorChain
     ) {
         ChangeSet changeSet = statement.getChangeSet();
-        var config = ParamsLoader.getLiquibaseClickhouseProperties();
+        var config = ((ClickHouseDatabase) database).getLiquibaseClickHouseConfig();
 
         var map = new EnumMap<>(ChangelogColumns.class);
         // author and filename can't be changed, as they are part of the primary key

@@ -21,7 +21,6 @@ package liquibase.ext.clickhouse.sqlgenerator.changeloglock;
 
 import liquibase.database.Database;
 import liquibase.ext.clickhouse.database.ClickHouseDatabase;
-import liquibase.ext.clickhouse.params.ParamsLoader;
 import liquibase.ext.clickhouse.sqlgenerator.SqlGeneratorUtil;
 import liquibase.ext.clickhouse.sqlgenerator.changeloglock.template.LockTemplate;
 import liquibase.sql.Sql;
@@ -51,7 +50,7 @@ public class LockDatabaseChangeLogClickHouse extends LockDatabaseChangeLogGenera
         Database database,
         SqlGeneratorChain sqlGeneratorChain
     ) {
-        var config = ParamsLoader.getLiquibaseClickhouseProperties();
+        var config = ((ClickHouseDatabase) database).getLiquibaseClickHouseConfig();
         String host = String.format("%s %s (%s)", hostname, hostDescription, hostaddress);
         String lockQuery = config.accept(new LockTemplate(database, host));
         return SqlGeneratorUtil.generateSql(database, lockQuery);

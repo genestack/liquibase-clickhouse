@@ -22,8 +22,6 @@ package liquibase.ext.clickhouse.sqlgenerator.changelog;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.ext.clickhouse.database.ClickHouseDatabase;
-import liquibase.ext.clickhouse.params.LiquibaseClickHouseConfig;
-import liquibase.ext.clickhouse.params.ParamsLoader;
 import liquibase.ext.clickhouse.params.StandaloneConfig;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -51,8 +49,8 @@ public class UpdateGeneratorClickhouse extends UpdateGenerator {
     public Sql[] generateSql(
         UpdateStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain
     ) {
-        LiquibaseClickHouseConfig properties = ParamsLoader.getLiquibaseClickhouseProperties();
-        if (properties instanceof StandaloneConfig) {
+        var config = ((ClickHouseDatabase) database).getLiquibaseClickHouseConfig();
+        if (config instanceof StandaloneConfig) {
             return super.generateSql(statement, database, sqlGeneratorChain);
         }
         return generateSqlForCluster(statement, database);
