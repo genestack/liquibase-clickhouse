@@ -27,7 +27,6 @@ import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.ext.clickhouse.database.ClickHouseDatabase;
-import liquibase.ext.clickhouse.params.ParamsLoader;
 import liquibase.ext.clickhouse.sqlgenerator.SqlGeneratorUtil;
 import liquibase.ext.clickhouse.sqlgenerator.changelog.template.UpdateTemplate;
 import liquibase.sql.Sql;
@@ -76,7 +75,7 @@ public class MarkChangeSetRanGeneratorClickhouse extends MarkChangeSetRanGenerat
         }
         // dealing with an update case
         ChangeSet changeSet = statement.getChangeSet();
-        var config = ParamsLoader.getLiquibaseClickhouseProperties();
+        var config = ((ClickHouseDatabase) database).getLiquibaseClickHouseConfig();
         var map = new EnumMap<>(ChangelogColumns.class);
         map.put(ChangelogColumns.DATEEXECUTED, new DatabaseFunction(database.getCurrentDateTimeFunction()));
         map.put(ChangelogColumns.ORDEREXECUTED, getOrderExecutedColumn(database));

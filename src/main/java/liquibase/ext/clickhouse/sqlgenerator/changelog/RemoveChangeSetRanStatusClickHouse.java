@@ -22,7 +22,6 @@ package liquibase.ext.clickhouse.sqlgenerator.changelog;
 import liquibase.database.Database;
 import liquibase.ext.clickhouse.database.ClickHouseDatabase;
 import liquibase.ext.clickhouse.params.LiquibaseClickHouseConfig;
-import liquibase.ext.clickhouse.params.ParamsLoader;
 import liquibase.ext.clickhouse.sqlgenerator.SqlGeneratorUtil;
 import liquibase.ext.clickhouse.sqlgenerator.changelog.template.RemoveChangeSetRanStatusTemplate;
 import liquibase.sql.Sql;
@@ -48,7 +47,7 @@ public class RemoveChangeSetRanStatusClickHouse extends RemoveChangeSetRanStatus
         Database database,
         SqlGeneratorChain sqlGeneratorChain
     ) {
-        LiquibaseClickHouseConfig properties = ParamsLoader.getLiquibaseClickhouseProperties();
+        LiquibaseClickHouseConfig properties = ((ClickHouseDatabase) database).getLiquibaseClickHouseConfig();
         String removeChangeSet =
             properties.accept(new RemoveChangeSetRanStatusTemplate(database, statement));
         return SqlGeneratorUtil.generateSql(database, removeChangeSet);

@@ -19,8 +19,7 @@ Maven dependency:
 ```
 
 The cluster mode can be activated by adding the **_liquibaseClickhouse.conf_** file
-to the classpath (liquibase/lib/). The file name can be changed by setting the system property
-`liquibase.clickhouse.configfile`. The file should contain the following properties:
+to the classpath (resource/).
 ```
 cluster {
     clusterName="{cluster}"
@@ -46,6 +45,23 @@ These example configuration will configure the plugin to create two
 paths in your zookeeper:
 - `/keeper/path/to/liquibase/liquibase/DATABASECHANGELOG`
 - `/keeper/path/to/liquibase/liquibase/DATABASECHANGELOGLOCK`
+
+The library also provides ClickHouseScopeUtils,
+which allows configuring the ClickHouse configuration file per Liquibase execution.
+
+```java
+ClickHouseScopeUtils.withConfig(
+        "cluster.conf",
+        liquibase::afterPropertiesSet
+);
+```
+
+The configuration file must be located in the application classpath
+(typically in the resources directory). Only the file name should be specified.
+
+This allows using multiple ClickHouse datasources in the same application,
+where some datasources use cluster mode, others work in standalone mode,
+or are connected to different ClickHouse clusters.
 <hr/>
 
 ###### Important changes
